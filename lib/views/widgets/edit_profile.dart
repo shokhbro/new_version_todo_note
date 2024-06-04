@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class EditProfile extends StatefulWidget {
   final String? initialName;
   final String? initialSurname;
+  final String? phoneNumber;
+
   final bool isEditing;
 
   const EditProfile({
@@ -10,6 +12,7 @@ class EditProfile extends StatefulWidget {
     this.initialName,
     this.initialSurname,
     required this.isEditing,
+    required this.phoneNumber,
   }) : super(key: key);
 
   @override
