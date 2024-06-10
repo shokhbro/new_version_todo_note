@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:todo_note_project/services/auth_http_services.dart';
 import 'package:todo_note_project/utils/routes.dart';
-import 'package:todo_note_project/views/screens/login_screen.dart';
 import 'package:todo_note_project/views/screens/register_screen.dart';
 
 void main(List<String> args) {
