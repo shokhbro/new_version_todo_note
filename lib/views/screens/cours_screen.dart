@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:todo_note_project/controllers/course_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_note_project/viewmodel.dart/course_view_model.dart';
 
 class CoursScreen extends StatelessWidget {
-  CoursScreen({super.key});
-
-  final courseContoller = CourseController();
-
   @override
   Widget build(BuildContext context) {
+    final courseViewModel = Provider.of<CourseViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -20,8 +19,9 @@ class CoursScreen extends StatelessWidget {
         backgroundColor: Colors.amber,
       ),
       body: FutureBuilder(
-        future: courseContoller.getCourse(),
+        future: courseViewModel.fetchCourses(),
         builder: (context, snapshot) {
+          print(snapshot.connectionState); // Log uchun qo'shildi
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -35,11 +35,12 @@ class CoursScreen extends StatelessWidget {
 
           if (snapshot.hasError) {
             return Center(
-              child: Text(snapshot.hasError.toString()),
+              child: Text(snapshot.error.toString()),
             );
           }
-          final courses = snapshot.data;
-          return courses == null || courses.isEmpty
+
+          final courses = courseViewModel.courses;
+          return courses.isEmpty
               ? const Center(
                   child: Text("Mahsulotlar mavjud emas!"),
                 )

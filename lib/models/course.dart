@@ -22,7 +22,19 @@ class Course {
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
-    return _$CourseFromJson(json);
+    List<Lesson> lessons = [];
+    (json['lesson'] as List<dynamic>).forEach((lessonJson) {
+      lessons.add(Lesson.fromJson(lessonJson));
+    });
+
+    return Course(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      imageUrl: json['imageUrl'] as String? ?? '',
+      lesson: lessons,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    );
   }
 
   Map<String, dynamic> toJson() {

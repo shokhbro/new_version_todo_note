@@ -124,7 +124,7 @@ class CustomDrawer extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                    return const AdminPanel();
+                    return AdminPanel();
                   }));
                 },
                 child: Container(
