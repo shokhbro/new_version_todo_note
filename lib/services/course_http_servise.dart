@@ -7,33 +7,16 @@ class CourseHttpService {
     "https://course-8c4f2-default-rtdb.europe-west1.firebasedatabase.app/courses.json",
   );
 
-Future<List<Course>> fetchCourse() async {
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final dynamic data =
-            jsonDecode(response.body); // `dynamic` deb o'zgartirdik
-        if (data != null && data is Map<String, dynamic>) {
-          // `data` ni tekshirishni o'zgartirdik
-          List<Course> loadedCourse = [];
-          data.forEach((key, value) {
-            value['id'] = key;
-            loadedCourse.add(Course.fromJson(value));
-          });
-          return loadedCourse;
-        } else {
-          // agar `data` bo'sh yoki javob JSON formatida emas bo'lsa, bo'sh ro'yxat qaytariladi
-          return [];
-        }
-      } else {
-        throw Exception('Failed to load courses');
-      }
-    } catch (e) {
-      print(e);
-      return [];
-    }
-  }
+  Future<List<Course>> fetchCourse() async {
+    final response = await http.get(url);
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
 
+    List<Course> loadedCourses = [];
+    data.forEach((courseId, courseData) {
+      loadedCourses.add(Course.fromJson({...courseData, 'id': courseId}));
+    });
+    return loadedCourses;
+  }
 
   Future<void> addCourse(Course course) async {
     try {

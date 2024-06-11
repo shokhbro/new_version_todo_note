@@ -13,7 +13,10 @@ class AdminPanel extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.amber,
-          title: const Text('Admin Panel'),
+          title: const Text(
+            'Admin Panel',
+            style: TextStyle(fontFamily: 'Lato'),
+          ),
         ),
         body: AdminPanelForm(),
       ),
@@ -32,22 +35,37 @@ class AdminPanelForm extends StatelessWidget {
         children: [
           TextField(
             controller: viewModel.titleController,
-            decoration: const InputDecoration(labelText: 'Title'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Title',
+            ),
           ),
+          const SizedBox(height: 15),
           TextField(
             controller: viewModel.descriptionController,
-            decoration: const InputDecoration(labelText: 'Description'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Description',
+            ),
           ),
+          const SizedBox(height: 15),
           TextField(
             controller: viewModel.imageUrlController,
-            decoration: const InputDecoration(labelText: 'Image URL'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Image URL',
+            ),
           ),
+          const SizedBox(height: 15),
           TextField(
             controller: viewModel.priceController,
-            decoration: const InputDecoration(labelText: 'Price'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Price',
+            ),
             keyboardType: TextInputType.number,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           ElevatedButton(
             onPressed: () {
               viewModel.addCourse();

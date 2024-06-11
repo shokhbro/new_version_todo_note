@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:todo_note_project/utils/routes.dart';
+import 'package:todo_note_project/views/screens/register_screen.dart';
 import 'package:todo_note_project/views/widgets/custom_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,6 +13,22 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.blue,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (ctx) {
+                  return const RegisterScreen();
+                }),
+              );
+            },
+            child: const Text(
+              "Register",
+              style: TextStyle(fontFamily: 'Lato'),
+            ),
+          ),
+        ],
         title: const Text(
           "Home Screen",
           style: TextStyle(
@@ -105,28 +122,33 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.blue,
-                    width: 2.5,
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Gap(20),
-                    Text(
-                      "Flutter Darslari",
-                      style: TextStyle(
-                        fontFamily: 'lato',
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, RoutesNames.course);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.blue,
+                      width: 2.5,
                     ),
-                  ],
+                  ),
+                  child: const Row(
+                    children: [
+                      Gap(20),
+                      Text(
+                        "Flutter Darslari",
+                        style: TextStyle(
+                          fontFamily: 'lato',
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -135,28 +157,33 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.blue,
-                    width: 2.5,
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Gap(20),
-                    Text(
-                      "Noldan Python",
-                      style: TextStyle(
-                        fontFamily: 'lato',
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, RoutesNames.course);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.blue,
+                      width: 2.5,
                     ),
-                  ],
+                  ),
+                  child: const Row(
+                    children: [
+                      Gap(20),
+                      Text(
+                        "Noldan Python",
+                        style: TextStyle(
+                          fontFamily: 'lato',
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -167,3 +194,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+ 

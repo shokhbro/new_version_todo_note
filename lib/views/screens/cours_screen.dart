@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_note_project/models/course.dart';
+import 'package:todo_note_project/models/lesson.dart';
 import 'package:todo_note_project/viewmodel.dart/course_view_model.dart';
+import 'package:todo_note_project/views/screens/cart_screen.dart';
+import 'package:todo_note_project/views/screens/favorite_screen.dart';
+import 'package:todo_note_project/views/screens/quiz_screen.dart';
+import 'package:todo_note_project/views/widgets/course_list_item.dart';
 
-class CoursScreen extends StatelessWidget {
+class CoursScreen extends StatefulWidget {
+  @override
+  State<CoursScreen> createState() => _CoursScreenState();
+}
+
+class _CoursScreenState extends State<CoursScreen> {
+  int _selectedIndex = 0;
+  bool isFavorite = false;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildCourseListItem(Course course) {
+    return CourseListItem(
+      course: course,
+      isFavorite: isFavorite,
+      toggleFavorite: () {
+        setState(() {
+          isFavorite = !isFavorite;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final courseViewModel = Provider.of<CourseViewModel>(context);
@@ -10,67 +42,91 @@ class CoursScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.amber,
         title: const Text(
           "Courses Screen",
           style: TextStyle(
             fontFamily: 'Lato',
           ),
         ),
-        backgroundColor: Colors.amber,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (ctx) {
+                  // Misol qiymatiga o'rnating
+                  final someLessonObject = Lesson(
+                    id: '1',
+                    courseld: '1',
+                    title: 'Some Lesson',
+                    description: 'Some Lesson Description',
+                    videoUrl: 'https://www.example.com/video.mp4',
+                    quizes: [],
+                  );
+                  return QuizScreen(lesson: someLessonObject);
+                }),
+              );
+            },
+            child: const Text("Quizes"),
+          ),
+        ],
       ),
-      body: FutureBuilder(
-        future: courseViewModel.fetchCourses(),
-        builder: (context, snapshot) {
-          print(snapshot.connectionState); // Log uchun qo'shildi
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(
-              child: Text("Malumotlar topilmadi!"),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-
-          final courses = courseViewModel.courses;
-          return courses.isEmpty
-              ? const Center(
-                  child: Text("Mahsulotlar mavjud emas!"),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ListView.builder(
-                    itemCount: courses.length,
-                    itemBuilder: (ctx, index) {
-                      final course = courses[index];
-                      return Card(
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.only(bottom: 10),
-                          leading: Image.network(
-                            course.imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                          title: Text(course.title),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(course.description),
-                              Text(course.price.toString()),
-                            ],
-                          ),
-                        ),
+      body: _selectedIndex == 2
+          ? const FavoriteScreen()
+          : _selectedIndex == 1
+              ? const CartScreen()
+              : FutureBuilder<List<Course>>(
+                  future: courseViewModel.fetchCourses(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                  ),
-                );
-        },
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text("Malumotlar topilmadi!"),
+                      );
+                    }
+
+                    final courses = snapshot.data!;
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ListView.builder(
+                        itemCount: courses.length,
+                        itemBuilder: (ctx, index) {
+                          final course = courses[index];
+                          return _buildCourseListItem(
+                              course); // <-- CourseListItem method call
+                        },
+                      ),
+                    );
+                  },
+                ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorite',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
     );
   }

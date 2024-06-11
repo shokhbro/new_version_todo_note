@@ -6,7 +6,7 @@ part 'quiz.g.dart';
 class Quiz {
   final String id;
   final String title;
-  final List answers;
+  final List<dynamic> answers;
   final int correctAnswer;
 
   Quiz({

@@ -3,28 +3,25 @@ import 'package:todo_note_project/models/course.dart';
 import 'package:todo_note_project/services/course_http_servise.dart';
 
 class CourseViewModel extends ChangeNotifier {
-  final CourseHttpService _courseHttpService = CourseHttpService();
-  List<Course> _courses = [];
+  final CourseHttpService courseHttpService = CourseHttpService();
 
-  List<Course> get courses => _courses;
-
-  Future<void> fetchCourses() async {
-    _courses = await _courseHttpService.fetchCourse();
-    notifyListeners();
+  Future<List<Course>> fetchCourses() async {
+    List<Course> courses = await courseHttpService.fetchCourse();
+    return courses;
   }
 
   Future<void> addCourse(Course course) async {
-    await _courseHttpService.addCourse(course);
+    await courseHttpService.addCourse(course);
     await fetchCourses();
   }
 
   Future<void> updateCourse(String id, Course course) async {
-    await _courseHttpService.updateCourse(id, course);
+    await courseHttpService.updateCourse(id, course);
     await fetchCourses();
   }
 
   Future<void> deleteCourse(String id) async {
-    await _courseHttpService.deleteCourse(id);
+    await courseHttpService.deleteCourse(id);
     await fetchCourses();
   }
 }

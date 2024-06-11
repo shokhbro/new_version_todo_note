@@ -8,10 +8,10 @@ part of 'quiz.dart';
 
 Quiz _$QuizFromJson(Map<String, dynamic> json) {
   return Quiz(
-    id: json['id'] as String? ??"bush",
-    title: json['title'] as String? ??"bush",
+    id: json['id'] as String? ?? "bush",
+    title: json['title'] as String? ?? "bush",
     answers: json['answers'] as List<dynamic>,
-    correctAnswer: (json['correctAnswer'] as num).toInt(),
+    correctAnswer: (json['correctAnswer'] as num?)?.toInt() ?? 0,
   );
 }
 

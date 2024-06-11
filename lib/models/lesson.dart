@@ -24,6 +24,7 @@ class Lesson {
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return _$LessonFromJson(json);
   }
+
   Map<String, dynamic> toJson() {
     return _$LessonToJson(this);
   }

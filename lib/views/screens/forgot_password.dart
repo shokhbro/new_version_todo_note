@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:todo_note_project/services/auth_http_services.dart';
-import 'package:todo_note_project/views/screens/home_screen.dart';
 import 'package:todo_note_project/views/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {

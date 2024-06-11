@@ -7,19 +7,16 @@ part of 'course.dart';
 // **************************************************************************
 
 Course _$CourseFromJson(Map<String, dynamic> json) {
-  List<Lesson> lessons = [];
-  (json['lessons'] as Map<String, dynamic>).forEach((key, value) {
-    value['id'] = key;
-    lessons.add(Lesson.fromJson(value));
-  });
-
   return Course(
-    id: json['id'] as String? ??"bush",
-    title: json['title'] as String? ??"bush",
-    description: json['description'] as String? ??"bush",
-    imageUrl: json['imageUrl'] as String? ??"bush",
-    lesson: lessons,
-    price: (json['price'] as num).toDouble(),
+    id: json['id'] as String? ?? "bush",
+    title: json['title'] as String? ?? "bush",
+    description: json['description'] as String? ?? "bush",
+    imageUrl: json['imageUrl'] as String? ?? "bush",
+    lesson: (json['lesson'] as List<dynamic>?)
+            ?.map((e) => Lesson.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [],
+    price: (json['price'] as num?)?.toDouble() ?? 0.0,
   );
 }
 
