@@ -24,4 +24,14 @@ class CourseViewModel extends ChangeNotifier {
     await courseHttpService.deleteCourse(id);
     await fetchCourses();
   }
+
+  Future<void> toggleFavorite(String courseId) async {
+    try {
+      await courseHttpService.changeFavoriteStatus(courseId);
+      notifyListeners();
+    } catch (e) {
+      print("Xatolik: $e");
+      throw e;
+    }
+  }
 }

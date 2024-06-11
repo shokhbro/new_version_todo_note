@@ -17,6 +17,7 @@ Course _$CourseFromJson(Map<String, dynamic> json) {
             .toList() ??
         [],
     price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    isFavorite: false,
   );
 }
 

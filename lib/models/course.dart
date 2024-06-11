@@ -11,6 +11,7 @@ class Course {
   final String imageUrl;
   final List<Lesson> lesson;
   final double price;
+  bool isFavorite;
 
   Course({
     required this.id,
@@ -19,6 +20,7 @@ class Course {
     required this.imageUrl,
     required this.lesson,
     required this.price,
+    required this.isFavorite,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:todo_note_project/utils/routes.dart';
 import 'package:todo_note_project/views/screens/register_screen.dart';
+import 'package:todo_note_project/views/screens/todo_screen.dart';
 import 'package:todo_note_project/views/widgets/custom_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -46,7 +47,10 @@ class HomeScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, RoutesNames.todoScreen);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (ctx) {
+                      return const TodoScreen();
+                    }));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -194,4 +198,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
- 

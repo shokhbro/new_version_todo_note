@@ -20,10 +20,8 @@ class AdminPanelViewModel extends ChangeNotifier {
       imageUrl: imageUrlController.text,
       lesson: [],
       price: double.parse(priceController.text),
+      isFavorite: true,
     );
-
-    _courseViewModel.addCourse(course);
-    notifyListeners();
   }
 
   void clearControllers() {

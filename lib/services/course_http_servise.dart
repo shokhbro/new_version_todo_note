@@ -64,4 +64,28 @@ class CourseHttpService {
       print(e);
     }
   }
+
+  Future<void> changeFavoriteStatus(String courseId) async {
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final courseData = data.entries
+            .firstWhere((entry) => entry.value['id'] == courseId)
+            .value;
+        bool isFavorite = courseData['isFavorite'] ?? false;
+        courseData['isFavorite'] = !isFavorite;
+        final updateResponse = await http.put(url, body: jsonEncode(data));
+        if (updateResponse.statusCode != 200) {
+          throw Exception('Kursning favorite holati o\'zgartirilmadi');
+        }
+      } else {
+        throw Exception(
+            'Ma\'lumotlar bazasidan kurslarni olishda xatolik yuz berdi');
+      }
+    } catch (e) {
+      print("Xatolik: $e");
+      throw e;
+    }
+  }
 }

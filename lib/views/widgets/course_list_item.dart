@@ -4,7 +4,7 @@ import 'package:todo_note_project/models/course.dart';
 class CourseListItem extends StatelessWidget {
   final Course course;
   final bool isFavorite;
-  final Function toggleFavorite;
+  final Function(String) toggleFavorite;
 
   const CourseListItem({
     required this.course,
@@ -26,11 +26,13 @@ class CourseListItem extends StatelessWidget {
         subtitle: Text(course.description),
         trailing: IconButton(
           onPressed: () {
-            toggleFavorite();
+            toggleFavorite(
+                course.id); // Pass the course ID to toggleFavorite function
           },
-          icon: isFavorite
-              ? const Icon(Icons.favorite)
-              : const Icon(Icons.favorite_border),
+          icon: Icon(
+            isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: isFavorite ? Colors.red : null,
+          ),
         ),
       ),
     );

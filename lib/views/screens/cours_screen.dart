@@ -15,7 +15,6 @@ class CoursScreen extends StatefulWidget {
 
 class _CoursScreenState extends State<CoursScreen> {
   int _selectedIndex = 0;
-  bool isFavorite = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -23,22 +22,21 @@ class _CoursScreenState extends State<CoursScreen> {
     });
   }
 
-  Widget _buildCourseListItem(Course course) {
+  Widget _buildCourseListItem(Course course, bool isFavorite) {
     return CourseListItem(
       course: course,
       isFavorite: isFavorite,
-      toggleFavorite: () {
-        setState(() {
-          isFavorite = !isFavorite;
-        });
+      toggleFavorite: (String courseId) {
+        final courseViewModel =
+            Provider.of<CourseViewModel>(context, listen: false);
+        courseViewModel.toggleFavorite(courseId);
       },
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    final courseViewModel = Provider.of<CourseViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -55,7 +53,6 @@ class _CoursScreenState extends State<CoursScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (ctx) {
-                  // Misol qiymatiga o'rnating
                   final someLessonObject = Lesson(
                     id: '1',
                     courseld: '1',
@@ -76,36 +73,43 @@ class _CoursScreenState extends State<CoursScreen> {
           ? const FavoriteScreen()
           : _selectedIndex == 1
               ? const CartScreen()
-              : FutureBuilder<List<Course>>(
-                  future: courseViewModel.fetchCourses(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(snapshot.error.toString()),
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text("Malumotlar topilmadi!"),
-                      );
-                    }
+              : Consumer<CourseViewModel>(
+                  builder: (context, courseViewModel, child) {
+                    return FutureBuilder<List<Course>>(
+                      future: courseViewModel.fetchCourses(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text("Malumotlar topilmadi!"),
+                          );
+                        }
 
-                    final courses = snapshot.data!;
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ListView.builder(
-                        itemCount: courses.length,
-                        itemBuilder: (ctx, index) {
-                          final course = courses[index];
-                          return _buildCourseListItem(
-                              course); // <-- CourseListItem method call
-                        },
-                      ),
+                        final courses = snapshot.data!;
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ListView.builder(
+                            itemCount: courses.length,
+                            itemBuilder: (ctx, index) {
+                              final course = courses[index];
+                              return _buildCourseListItem(
+                                course,
+                                course.isFavorite,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
