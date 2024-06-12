@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:todo_note_project/models/course.dart';
-
 class CourseHttpService {
   final Uri url = Uri.parse(
     "https://course-8c4f2-default-rtdb.europe-west1.firebasedatabase.app/courses.json",
@@ -75,17 +74,19 @@ class CourseHttpService {
             .value;
         bool isFavorite = courseData['isFavorite'] ?? false;
         courseData['isFavorite'] = !isFavorite;
-        final updateResponse = await http.put(url, body: jsonEncode(data));
+        final updateUrl = Uri.parse("$url/${courseId}.json");
+        final updateResponse =
+            await http.put(updateUrl, body: jsonEncode(courseData));
         if (updateResponse.statusCode != 200) {
-          throw Exception('Kursning favorite holati o\'zgartirilmadi');
+          throw Exception('Failed to update favorite status');
         }
       } else {
-        throw Exception(
-            'Ma\'lumotlar bazasidan kurslarni olishda xatolik yuz berdi');
+        throw Exception('Failed to fetch courses');
       }
     } catch (e) {
-      print("Xatolik: $e");
+      print("Error: $e");
       throw e;
     }
   }
 }
+

@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_note_project/models/course.dart';
-import 'package:todo_note_project/models/lesson.dart';
 import 'package:todo_note_project/viewmodel.dart/course_view_model.dart';
+import 'package:todo_note_project/views/widgets/course_list_item.dart';
+import 'package:todo_note_project/views/widgets/search_view_delegate.dart';
 import 'package:todo_note_project/views/screens/cart_screen.dart';
 import 'package:todo_note_project/views/screens/favorite_screen.dart';
-import 'package:todo_note_project/views/screens/quiz_screen.dart';
-import 'package:todo_note_project/views/widgets/course_list_item.dart';
 
-class CoursScreen extends StatefulWidget {
+class CourseScreen extends StatefulWidget {
   @override
-  State<CoursScreen> createState() => _CoursScreenState();
+  State<CourseScreen> createState() => _CourseScreenState();
 }
 
-class _CoursScreenState extends State<CoursScreen> {
+class _CourseScreenState extends State<CourseScreen> {
   int _selectedIndex = 0;
+
+  static List<Widget> _pages = <Widget>[
+    CourseList(),
+    FavoriteScreen(),
+    CartScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -22,116 +26,83 @@ class _CoursScreenState extends State<CoursScreen> {
     });
   }
 
-  Widget _buildCourseListItem(Course course, bool isFavorite) {
-    return CourseListItem(
-      course: course,
-      isFavorite: isFavorite,
-      toggleFavorite: (String courseId) {
-        final courseViewModel =
-            Provider.of<CourseViewModel>(context, listen: false);
-        courseViewModel.toggleFavorite(courseId);
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    final courseViewModel =
+        Provider.of<CourseViewModel>(context, listen: false);
+    courseViewModel.fetchCourses();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         backgroundColor: Colors.amber,
+        centerTitle: true,
+        elevation: 0,
         title: const Text(
-          "Courses Screen",
+          "Online Education",
           style: TextStyle(
-            fontFamily: 'Lato',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         actions: [
-          TextButton(
+          IconButton(
+            icon: const Icon(Icons.search),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (ctx) {
-                  final someLessonObject = Lesson(
-                    id: '1',
-                    courseld: '1',
-                    title: 'Some Lesson',
-                    description: 'Some Lesson Description',
-                    videoUrl: 'https://www.example.com/video.mp4',
-                    quizes: [],
-                  );
-                  return QuizScreen(lesson: someLessonObject);
-                }),
+              showSearch(
+                context: context,
+                delegate: SearchViewDelegate(
+                  Provider.of<CourseViewModel>(context, listen: false).courses,
+                ),
               );
             },
-            child: const Text("Quizes"),
           ),
         ],
       ),
-      body: _selectedIndex == 2
-          ? const FavoriteScreen()
-          : _selectedIndex == 1
-              ? const CartScreen()
-              : Consumer<CourseViewModel>(
-                  builder: (context, courseViewModel, child) {
-                    return FutureBuilder<List<Course>>(
-                      future: courseViewModel.fetchCourses(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text(snapshot.error.toString()),
-                          );
-                        }
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(
-                            child: Text("Malumotlar topilmadi!"),
-                          );
-                        }
-
-                        final courses = snapshot.data!;
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: ListView.builder(
-                            itemCount: courses.length,
-                            itemBuilder: (ctx, index) {
-                              final course = courses[index];
-                              return _buildCourseListItem(
-                                course,
-                                course.isFavorite,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
-          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
     );
+  }
+}
+
+class CourseList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final courseViewModel = Provider.of<CourseViewModel>(context);
+    return courseViewModel.courses.isEmpty
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            itemCount: courseViewModel.courses.length,
+            itemBuilder: (context, index) {
+              final course = courseViewModel.courses[index];
+              return CourseListItem(
+                course: course,
+                isFavorite: course.isFavorite,
+                toggleFavorite: courseViewModel.toggleFavorite,
+              );
+            },
+          );
   }
 }

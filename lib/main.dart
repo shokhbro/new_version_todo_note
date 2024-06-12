@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const HomeScreen(),
         routes: {
-          RoutesNames.course: (context) => CoursScreen(),
+          RoutesNames.course: (context) => CourseScreen(),
           RoutesNames.adminPanel: (context) => AdminPanel(),
         },
       ),

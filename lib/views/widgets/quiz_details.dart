@@ -46,7 +46,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                       _answered = true;
                     });
                   },
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
           if (_answered)
             Text(

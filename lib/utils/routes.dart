@@ -7,7 +7,7 @@ import 'package:todo_note_project/views/screens/todo_screen.dart';
 class AppRoutes {
   static final routes = {
     RoutesNames.home: (ctx) => const RegisterScreen(),
-    RoutesNames.course: (ctx) => CoursScreen(),
+    RoutesNames.course: (ctx) => CourseScreen(),
     RoutesNames.todoScreen: (ctx) => const TodoScreen(),
     RoutesNames.profileScreen: (ctx) => const ProfileScreen(),
     RoutesNames.adminPanel: (ctx) => AdminPanel(),
